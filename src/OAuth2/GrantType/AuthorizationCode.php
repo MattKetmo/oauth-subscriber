@@ -4,6 +4,7 @@ namespace GuzzleHttp\Subscriber\OAuth2\GrantType;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Collection;
+use GuzzleHttp\Post\PostBody;
 use GuzzleHttp\Subscriber\OAuth2\Exception\ReauthorizationException;
 use GuzzleHttp\Subscriber\OAuth2\Signer\ClientCredentials\SignerInterface;
 

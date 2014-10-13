@@ -17,16 +17,6 @@ use GuzzleHttp\Exception\BadResponseException;
 
 use GuzzleHttp\Subscriber\OAuth2\RawToken;
 use GuzzleHttp\Subscriber\OAuth2\OAuth2Subscriber;
-use GuzzleHttp\Subscriber\OAuth2\Exception\AccessTokenRequestException;
-use GuzzleHttp\Subscriber\OAuth2\Exception\RefreshTokenRequestException;
-use GuzzleHttp\Subscriber\OAuth2\Factory\GenericTokenFactory;
-use GuzzleHttp\Subscriber\OAuth2\GrantType\GrantTypeInterface;
-use GuzzleHttp\Subscriber\OAuth2\Persistence\NullTokenPersistence;
-use GuzzleHttp\Subscriber\OAuth2\Persistence\TokenPersistenceInterface;
-use GuzzleHttp\Subscriber\OAuth2\Signer\AccessToken\BasicAuth as AccessTokenBasicAuth;
-use GuzzleHttp\Subscriber\OAuth2\Signer\AccessToken\SignerInterface as AccessTokenSigner;
-use GuzzleHttp\Subscriber\OAuth2\Signer\ClientCredentials\BasicAuth as ClientCredentialsBasicAuth;
-use GuzzleHttp\Subscriber\OAuth2\Signer\ClientCredentials\SignerInterface as ClientCredentialsSigner;
 
 /**
  * OAuth2 plugin.
