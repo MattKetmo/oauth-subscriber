@@ -7,8 +7,11 @@ use GuzzleHttp\Event\ErrorEvent;
 use GuzzleHttp\Event\RequestEvents;
 use GuzzleHttp\Event\SubscriberInterface;
 use GuzzleHttp\Exception\BadResponseException;
+
+use GuzzleHttp\Subscriber\OAuth2\Exception\OAuth2Exception;
 use GuzzleHttp\Subscriber\OAuth2\Exception\AccessTokenRequestException;
 use GuzzleHttp\Subscriber\OAuth2\Exception\RefreshTokenRequestException;
+use GuzzleHttp\Subscriber\OAuth2\Exception\ReauthorizationException;
 use GuzzleHttp\Subscriber\OAuth2\Factory\GenericTokenFactory;
 use GuzzleHttp\Subscriber\OAuth2\GrantType\GrantTypeInterface;
 use GuzzleHttp\Subscriber\OAuth2\Persistence\NullTokenPersistence;
@@ -210,15 +213,11 @@ class OAuth2Subscriber implements SubscriberInterface
             $this->rawToken = is_array($token)? $this->tokenFactory($token): $this->tokenFactory(['access_token'=>$token]);
         }
 
-        return $this;
-    }
+        if ($this->rawToken === null) {
+            throw new OAuth2Exception("setAccessToken() takes a string, array or RawToken object");
+        }
 
-    /**
-     * Helper method for (callable)tokenFactory
-     * @return RawToken
-     */
-    protected function tokenFactory() {
-        return call_user_func_array($this->tokenFactory, func_get_args());
+        return $this;
     }
 
     /**
@@ -228,7 +227,7 @@ class OAuth2Subscriber implements SubscriberInterface
      *
      * @throws AccessTokenRequestException while trying to run `requestNewAccessToken` method
      */
-    protected function getAccessToken()
+    public function getAccessToken()
     {
         // If token is not set try to get it from the persistent storage.
         if (null === $this->rawToken) {
@@ -249,6 +248,14 @@ class OAuth2Subscriber implements SubscriberInterface
         }
 
         return $this->rawToken ? $this->rawToken->getAccessToken() : null;
+    }
+
+    /**
+     * Helper method for (callable)tokenFactory
+     * @return RawToken
+     */
+    protected function tokenFactory() {
+        return call_user_func_array($this->tokenFactory, func_get_args());
     }
 
     /**
@@ -275,6 +282,10 @@ class OAuth2Subscriber implements SubscriberInterface
                 // If the refresh token is invalid, then clear the entire token information.
                 $this->rawToken = null;
             }
+        }
+
+        if ($this->grantType === null) {
+            throw new ReauthorizationException('You must specify a grantType class to request an access token');
         }
 
         try {

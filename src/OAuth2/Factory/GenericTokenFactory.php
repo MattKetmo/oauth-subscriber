@@ -31,17 +31,24 @@ class GenericTokenFactory
             $refreshToken = $previousToken->getRefreshToken();
         }
 
-        // Read the "expires_in" attribute
-        $expiresIn = isset($data['expires_in'])? (int)$data['expires_in']: null;
+        if (isset($data['expires_at'])) {
+            $expiresAt = (int)$data['expires_at'];
 
-        // Facebook unfortunately breaks the spec by using 'expires' instead of 'expires_in'
-        if (!$expiresIn && isset($data['expires'])) {
-            $expiresIn = (int)$data['expires'];
-        }
+        } else {
 
-        // Set the absolute expiration if a relative expiration was provided
-        if ($expiresIn) {
-            $expiresAt = time() + $expiresIn;
+            // Read the "expires_in" attribute
+            $expiresIn = isset($data['expires_in'])? (int)$data['expires_in']: null;
+
+            // Facebook unfortunately breaks the spec by using 'expires' instead of 'expires_in'
+            if (!$expiresIn && isset($data['expires'])) {
+                $expiresIn = (int)$data['expires'];
+            }
+
+            // Set the absolute expiration if a relative expiration was provided
+            if ($expiresIn) {
+                $expiresAt = time() + $expiresIn;
+            }
+
         }
 
         return new RawToken($accessToken, $refreshToken, $expiresAt);
