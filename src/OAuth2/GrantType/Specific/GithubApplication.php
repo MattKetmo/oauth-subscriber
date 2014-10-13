@@ -11,9 +11,9 @@ use GuzzleHttp\Post\PostBody;
 use GuzzleHttp\Stream\Stream;
 
 /**
- * Client credentials grant type.
- *
- * @link http://tools.ietf.org/html/rfc6749#section-4.4
+ * GitHub Application-specific grant type.  Like ClientCredentials, but uses
+ * github.com username/password via basic auth and client_id/client_secret via JSON
+ * to create an access_token.
  */
 class GithubApplication implements GrantTypeInterface
 {
