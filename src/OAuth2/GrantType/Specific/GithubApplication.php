@@ -41,12 +41,12 @@ class GithubApplication implements GrantTypeInterface
         $this->config = Collection::fromConfig($config,
             // Defaults
             [
-                'client_secret' => '',
                 'scope' => '',
             ],
             // Required
             [
                 'client_id',
+                'client_secret',
                 'note',
                 'username',
                 'password',
