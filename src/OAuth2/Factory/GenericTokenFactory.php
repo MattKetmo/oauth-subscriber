@@ -6,7 +6,7 @@ use GuzzleHttp\Subscriber\OAuth2\RawToken;
 
 class GenericTokenFactory
 {
-    public function __invoke(array $data, array $previousToken = null)
+    public function __invoke(array $data, RawToken $previousToken = null)
     {
         $accessToken = null;
         $refreshToken = null;
@@ -21,8 +21,6 @@ class GenericTokenFactory
         if (isset($data['refresh_token'])) {
             $refreshToken = $data['refresh_token'];
         } elseif ($previousToken !== null) {
-            // TODO: figure out if this code works!
-
             // When requesting a new access token with a refresh token, the
             // server may not resend a new refresh token. In that case we
             // should keep the previous refresh token as valid.
