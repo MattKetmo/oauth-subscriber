@@ -4,12 +4,9 @@ namespace GuzzleHttp\Subscriber\OAuth2\Factory;
 
 use GuzzleHttp\Subscriber\OAuth2\RawToken;
 
-class GenericTokenFactory implements TokenFactoryInterface
+class GenericTokenFactory
 {
-    /**
-     * {@inheticdoc}
-     */
-    public function createRawToken(array $data)
+    public function __invoke(array $data, array $previousToken = null)
     {
         $accessToken = null;
         $refreshToken = null;
@@ -23,7 +20,9 @@ class GenericTokenFactory implements TokenFactoryInterface
         // Read "refresh_token" attribute
         if (isset($data['refresh_token'])) {
             $refreshToken = $data['refresh_token'];
-        } elseif (null !== $previousToken) {
+        } elseif ($previousToken !== null) {
+            // TODO: figure out if this code works!
+
             // When requesting a new access token with a refresh token, the
             // server may not resend a new refresh token. In that case we
             // should keep the previous refresh token as valid.
@@ -33,11 +32,16 @@ class GenericTokenFactory implements TokenFactoryInterface
         }
 
         // Read the "expires_in" attribute
-        if (isset($data['expires_in'])) {
-            $expiresAt = time() + (int) $data['expires_in'];
-        } elseif (isset($data['expires'])) {
-            // Facebook unfortunately breaks the spec by using 'expires' instead of 'expires_in'
-            $expiresAt = time() + (int) $data['expires'];
+        $expiresIn = isset($data['expires_in'])? (int)$data['expires_in']: null;
+
+        // Facebook unfortunately breaks the spec by using 'expires' instead of 'expires_in'
+        if (!$expiresIn && isset($data['expires'])) {
+            $expiresIn = (int)$data['expires'];
+        }
+
+        // Set the absolute expiration if a relative expiration was provided
+        if ($expiresIn) {
+            $expiresAt = time() + $expiresIn;
         }
 
         return new RawToken($accessToken, $refreshToken, $expiresAt);

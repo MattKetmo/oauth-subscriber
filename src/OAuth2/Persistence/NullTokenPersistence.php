@@ -17,7 +17,7 @@ class NullTokenPersistence implements TokenPersistenceInterface
     /**
      * {@inheritdoc}
      */
-    public function restoreToken()
+    public function restoreToken(callable $tokenFactory)
     {
         return null;
     }

@@ -10,7 +10,6 @@ use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Subscriber\OAuth2\Exception\AccessTokenRequestException;
 use GuzzleHttp\Subscriber\OAuth2\Exception\RefreshTokenRequestException;
 use GuzzleHttp\Subscriber\OAuth2\Factory\GenericTokenFactory;
-use GuzzleHttp\Subscriber\OAuth2\Factory\TokenFactoryInterface;
 use GuzzleHttp\Subscriber\OAuth2\GrantType\GrantTypeInterface;
 use GuzzleHttp\Subscriber\OAuth2\Persistence\NullTokenPersistence;
 use GuzzleHttp\Subscriber\OAuth2\Persistence\TokenPersistenceInterface;
@@ -76,7 +75,7 @@ class OAuth2Subscriber implements SubscriberInterface
      * @param GrantTypeInterface $grantType
      * @param GrantTypeInterface $refreshTokenGrantType
      */
-    public function __construct(GrantTypeInterface $grantType, GrantTypeInterface $refreshTokenGrantType = null)
+    public function __construct(GrantTypeInterface $grantType = null, GrantTypeInterface $refreshTokenGrantType = null)
     {
         // Tokens
         $this->grantType = $grantType;
@@ -120,9 +119,9 @@ class OAuth2Subscriber implements SubscriberInterface
     }
 
     /**
-     * @param TokenFactoryInterface $tokenFactory
+     * @param callable $tokenFactory
      */
-    public function setTokenFactory(TokenFactoryInterface $tokenFactory)
+    public function setTokenFactory(callable $tokenFactory)
     {
         $this->tokenFactory = $tokenFactory;
 
@@ -203,6 +202,29 @@ class OAuth2Subscriber implements SubscriberInterface
     }
 
     /**
+     * Manually set the access token
+     * @param string|array|RawToken $token An array of token data, an access token string, or a RawToken object
+     */
+    public function setAccessToken($token)
+    {
+        if ($token instanceOf RawToken) {
+            $this->rawToken = $token;
+        } else {
+            $this->rawToken = is_array($token)? $this->tokenFactory($token): $this->tokenFactory(['access_token'=>$token]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Helper method for (callable)tokenFactory
+     * @return RawToken
+     */
+    protected function tokenFactory() {
+        return call_user_func_array($this->tokenFactory, func_get_args());
+    }
+
+    /**
      * Get a valid access token.
      *
      * @return string|null A valid access token or null if unable to get one
@@ -213,7 +235,7 @@ class OAuth2Subscriber implements SubscriberInterface
     {
         // If token is not set try to get it from the persistent storage.
         if (null === $this->rawToken) {
-            $this->rawToken = $this->tokenPersistence->restoreToken();
+            $this->rawToken = $this->tokenPersistence->restoreToken($this->tokenFactory);
         }
 
         // If token is not set or expired then try to acquire a new one...
@@ -249,7 +271,7 @@ class OAuth2Subscriber implements SubscriberInterface
                     $this->rawToken->getRefreshToken()
                 );
 
-                $this->rawToken = $this->tokenFactory->createRawToken($rawData, $this->rawToken);
+                $this->rawToken = $this->tokenFactory($rawData, $this->rawToken);
 
                 return;
             } catch (BadResponseException $e) {
@@ -262,7 +284,7 @@ class OAuth2Subscriber implements SubscriberInterface
             // Request an access token using the main grant type.
             $rawData = $this->grantType->getRawData($this->clientCredentialsSigner);
 
-            $this->rawToken = $this->tokenFactory->createRawToken($rawData);
+            $this->rawToken = $this->tokenFactory($rawData);
         } catch (BadResponseException $e) {
             throw new AccessTokenRequestException('Unable to request a new access token', $e);
         }

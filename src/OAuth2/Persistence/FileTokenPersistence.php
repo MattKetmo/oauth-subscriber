@@ -27,7 +27,7 @@ class FileTokenPersistence implements TokenPersistenceInterface
     /**
      * {@inheritdoc}
      */
-    public function restoreToken()
+    public function restoreToken(callable $tokenFactory)
     {
         if (!file_exists($this->filepath)) {
             return null;
@@ -39,7 +39,7 @@ class FileTokenPersistence implements TokenPersistenceInterface
             return null;
         }
 
-        return RawToken::fromArray($data);
+        return $tokenFactory($data);
     }
 
     /**
