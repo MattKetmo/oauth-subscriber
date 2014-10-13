@@ -1,6 +1,6 @@
 {
     "name": "guzzlehttp/oauth-subscriber",
-    "description": "Guzzle OAuth 1.0 subscriber",
+    "description": "Guzzle Subscriber for OAuth 1.0 and 2.0",
     "homepage": "http://guzzlephp.org/",
     "keywords": ["oauth", "guzzle"],
     "license": "MIT",
