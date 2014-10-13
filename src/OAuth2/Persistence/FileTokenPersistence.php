@@ -28,7 +28,7 @@ class FileTokenPersistence implements TokenPersistenceInterface
         }
 
         $data = json_decode(file_get_contents($this->filepath), true);
-
+        
         if (false === $data) {
             return null;
         }
