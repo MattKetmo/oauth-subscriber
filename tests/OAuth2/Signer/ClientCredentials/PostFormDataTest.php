@@ -1,10 +1,11 @@
 <?php
 
-namespace GuzzleHttp\Subscriber\OAuth2\Signer\ClientCredentials;
+namespace GuzzleHttp\Subscriber\OAuth2\Tests\Signer\ClientCredentials;
 
 use PHPUnit_Framework_TestCase;
 use GuzzleHttp\Message\Request;
 use GuzzleHttp\Post\PostBody;
+use GuzzleHttp\Subscriber\OAuth2\Signer\ClientCredentials\PostFormData;
 
 class PostFormDataTest extends PHPUnit_Framework_TestCase
 {    

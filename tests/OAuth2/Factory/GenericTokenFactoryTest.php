@@ -1,9 +1,10 @@
 <?php
 
-namespace GuzzleHttp\Subscriber\OAuth2\Factory;
+namespace GuzzleHttp\Subscriber\OAuth2\Tests\Factory;
 
 use PHPUnit_Framework_TestCase;
 use GuzzleHttp\Subscriber\OAuth2\RawToken;
+use GuzzleHttp\Subscriber\OAuth2\Factory\GenericTokenFactory;
 
 class GenericTokenFactoryTest extends PHPUnit_Framework_TestCase
 {

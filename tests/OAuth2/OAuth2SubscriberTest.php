@@ -1,6 +1,6 @@
 <?php
 
-namespace GuzzleHttp\Subscriber\OAuth2;
+namespace GuzzleHttp\Subscriber\OAuth2\Tests;
 
 use PHPUnit_Framework_TestCase;
 
@@ -15,6 +15,8 @@ use GuzzleHttp\Event\SubscriberInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\BadResponseException;
 
+use GuzzleHttp\Subscriber\OAuth2\RawToken;
+use GuzzleHttp\Subscriber\OAuth2\OAuth2Subscriber;
 use GuzzleHttp\Subscriber\OAuth2\Exception\AccessTokenRequestException;
 use GuzzleHttp\Subscriber\OAuth2\Exception\RefreshTokenRequestException;
 use GuzzleHttp\Subscriber\OAuth2\Factory\GenericTokenFactory;

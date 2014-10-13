@@ -1,10 +1,10 @@
 <?php
 
-namespace GuzzleHttp\Subscriber\OAuth2\Signer\AccessToken;
+namespace GuzzleHttp\Subscriber\OAuth2\Tests\Signer\AccessToken;
 
 use PHPUnit_Framework_TestCase;
-
 use GuzzleHttp\Message\Request;
+use GuzzleHttp\Subscriber\OAuth2\Signer\AccessToken\QueryString;
 
 class QueryStringTest extends PHPUnit_Framework_TestCase
 {

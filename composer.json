@@ -25,6 +25,11 @@
             "GuzzleHttp\\Subscriber\\Oauth\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "GuzzleHttp\\Subscriber\\OAuth2\\Tests\\": "tests/OAuth2"
+        }
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "0.1-dev"

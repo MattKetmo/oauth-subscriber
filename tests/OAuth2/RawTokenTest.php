@@ -1,8 +1,9 @@
 <?php
 
-namespace GuzzleHttp\Subscriber\OAuth2;
+namespace GuzzleHttp\Subscriber\OAuth2\Tests;
 
 use PHPUnit_Framework_TestCase;
+use GuzzleHttp\Subscriber\OAuth2\RawToken;
 
 class RawTokenTest extends PHPUnit_Framework_TestCase
 {
