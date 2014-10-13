@@ -16,17 +16,11 @@ class FileTokenPersistence implements TokenPersistenceInterface
         $this->filepath = $filepath;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function saveToken(RawToken $token)
     {
         file_put_contents($this->filepath, json_encode($token->toArray()));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function restoreToken(callable $tokenFactory)
     {
         if (!file_exists($this->filepath)) {
@@ -42,9 +36,6 @@ class FileTokenPersistence implements TokenPersistenceInterface
         return $tokenFactory($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function deleteToken()
     {
         if (file_exists($this->filepath)) {

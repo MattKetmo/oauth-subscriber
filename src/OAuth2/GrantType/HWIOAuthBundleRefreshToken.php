@@ -34,9 +34,6 @@ class HWIOAuthBundleRefreshToken implements GrantTypeInterface
         $this->resourceOwnerMap = $resourceOwnerMap;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTokenData(SignerInterface $clientCredentialsSigner, $refreshToken = null)
     {
         $token = $this->securityContext->getToken();

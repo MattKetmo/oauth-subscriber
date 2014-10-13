@@ -47,9 +47,6 @@ class RefreshToken implements GrantTypeInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getTokenData(SignerInterface $clientCredentialsSigner, $refreshToken = null)
     {
         $postBody = [

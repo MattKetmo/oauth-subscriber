@@ -128,9 +128,6 @@ class OAuth2Subscriber implements SubscriberInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEvents()
     {
         return [
