@@ -6,6 +6,7 @@ use PHPUnit_Framework_TestCase;
 use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Client;
 use GuzzleHttp\Subscriber\Mock as MockResponder;
+use GuzzleHttp\Subscriber\History;
 use GuzzleHttp\Message\Request;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Post\PostBody;
@@ -41,10 +42,13 @@ class RefreshTokenTest extends PHPUnit_Framework_TestCase
         ];
         $response = new Response(200, [], Stream::factory(json_encode($response_data)));
 
-        $mock_responder = new MockResponder([$response]);
+        $responder = new MockResponder([$response]);
+        $history = new History();
 
         $client = new Client();
-        $client->getEmitter()->attach($mock_responder);
+        $client->getEmitter()->attach($responder);
+        $client->getEmitter()->attach($history);
+
 
         $grant = new RefreshToken($client, [
             'client_id' => 'foo',
@@ -53,25 +57,20 @@ class RefreshTokenTest extends PHPUnit_Framework_TestCase
             'refresh_token' => 'baggins',
         ]);
 
-        // We'll use this to rip out the request body from a callback
-        $inspect = new \stdClass();
-
         $signer = $this->getMockBuilder('\GuzzleHttp\Subscriber\OAuth2\Signer\ClientCredentials\BasicAuth')
             ->setMethods(['sign'])
             ->getMock();
 
         $signer->expects($this->once())
             ->method('sign')
-            ->with($this->callback(function ($request) use ($inspect) {
-                $inspect->body = $request->getBody();
-                return true;
-            }), 'foo', 'bar');
+            ->with($this->anything(), 'foo', 'bar');
 
         $data = $grant->getRawData($signer);
+        $request_body = $history->getLastRequest()->getBody();
 
         $this->assertEquals($response_data, $data);
-        $this->assertEquals('bilbo', $inspect->body->getField('scope'));
-        $this->assertEquals('baggins', $inspect->body->getField('refresh_token'));
-        $this->assertEquals('refresh_token', $inspect->body->getField('grant_type'));
+        $this->assertEquals('bilbo', $request_body->getField('scope'));
+        $this->assertEquals('baggins', $request_body->getField('refresh_token'));
+        $this->assertEquals('refresh_token', $request_body->getField('grant_type'));
     }
 }
