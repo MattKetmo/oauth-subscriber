@@ -26,24 +26,25 @@ trait TokenSerializer
 
     /**
      * Serialize Token data
-     * @return array Token data
+     * @return string Token data
      */
     public function serialize()
     {
-        return [
+        return serialize([
             'access_token'  => $this->accessToken,
             'refresh_token' => $this->refreshToken,
             'expires_at'    => $this->expiresAt,
-        ];
+        ]);
     }
 
     /**
      * Unserialize token data
      * @return self
      */
-    public function unserialize(array $data)
+    public function unserialize($data)
     {
-        if (!isset($data['access_token'])) {
+        $data = unserialize($data);
+        if (!is_array($data) || !isset($data['access_token'])) {
             throw new \InvalidArgumentException('Unable to create a RawToken without an "access_token"');
         }
 

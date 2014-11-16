@@ -29,7 +29,8 @@ class RawTokenTest extends PHPUnit_Framework_TestCase
             self::$tokenData['expires_at']
         );
 
-        $this->assertEquals(self::$tokenData, $token->serialize());
+        $result = serialize(self::$tokenData);
+        $this->assertEquals($result, $token->serialize());
     }
 
     public function testUnserialize()
