@@ -19,7 +19,7 @@ class PostFormData implements SignerInterface
     {
         $body = $request->getBody();
 
-        if (!$body instanceof PostBodyInterface) {
+        if (!($body instanceof PostBodyInterface)) {
             throw new \RuntimeException('Unable to set fields in request body');
         }
 

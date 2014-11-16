@@ -1,7 +1,7 @@
 <?php
 namespace GuzzleHttp\Subscriber\OAuth2\Token;
 
-class RawToken implements Serializable, TokenInterface
+class RawToken implements \Serializable, TokenInterface
 {
     // Pull in serialize() and unserialize() methods
     use TokenSerializer;
